@@ -1,23 +1,12 @@
 import os
 from pathlib import Path
-import dj_database_url
 
-# -------------------------------------------------
-# 🏠 BASE DIRECTORY
-# -------------------------------------------------
-# This should point to the folder that contains manage.py
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# -------------------------------------------------
-# 🔐 SECURITY SETTINGS
-# -------------------------------------------------
-SECRET_KEY = os.environ.get("SECRET_KEY", "your-secret-key-here")
+SECRET_KEY = os.environ.get("SECRET_KEY", "ac6764adb80730f10e9385a1d4b9f82a")
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
-# -------------------------------------------------
-# 📦 INSTALLED APPS
-# -------------------------------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -25,16 +14,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'posts'# 👉 Add your apps here
-    # "myapp",
+    # your apps…
+    "posts",  # if you have this app
 ]
 
-# -------------------------------------------------
-# ⚙️ MIDDLEWARE
-# -------------------------------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # for serving static files on Render
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # serve static
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -43,31 +29,23 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# -------------------------------------------------
-# 📍 URLS & WSGI/ASGI
-# -------------------------------------------------
-ROOT_URLCONF = "config.urls"  # 👈 change "config" to your project folder name
+ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
-# -------------------------------------------------
-# 🗄️ DATABASE
-# -------------------------------------------------
+# ---- Database: SQLite (simplest) ----
 DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=True,
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
-# -------------------------------------------------
-# 🧱 TEMPLATES
-# -------------------------------------------------
+# ---- Templates ----
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],  # add [BASE_DIR / "templates"] if you have a global templates folder
+        "DIRS": [],  # add [BASE_DIR / "templates"] only if you have a global folder
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -80,32 +58,14 @@ TEMPLATES = [
     },
 ]
 
-# -------------------------------------------------
-# 🔄 PASSWORD VALIDATION
-# -------------------------------------------------
-AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
-]
-
-# -------------------------------------------------
-# 🌍 INTERNATIONALIZATION
-# -------------------------------------------------
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# -------------------------------------------------
-# 🧊 STATIC FILES (for Render)
-# -------------------------------------------------
+# ---- Static files for Render ----
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# -------------------------------------------------
-# 📩 DEFAULT AUTO FIELD
-# -------------------------------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
