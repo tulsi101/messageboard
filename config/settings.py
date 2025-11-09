@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent  # points at folder with manage.py
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "ac6764adb80730f10e9385a1d4b9f82a")
+SECRET_KEY = os.environ.get("SECRET_KEY", "")
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
@@ -15,12 +15,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # your apps…
-    "posts",  # if you have this app
+    "posts",  # keep if you have this app; otherwise remove
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # serve static
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # serve static on Render
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -33,7 +33,7 @@ ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
-# ---- Database: SQLite (simplest) ----
+# ---- SQLite (simplest for Render) ----
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -41,11 +41,10 @@ DATABASES = {
     }
 }
 
-# ---- Templates ----
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],  # add [BASE_DIR / "templates"] only if you have a global folder
+        "DIRS": [],  # add [BASE_DIR / "templates"] only if you have a global templates folder
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -63,7 +62,7 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# ---- Static files for Render ----
+# ---- Static files (required for collectstatic/WhiteNoise) ----
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
